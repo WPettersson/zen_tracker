@@ -24,7 +24,11 @@ def get_page(prefix=PREFIX):
 def parse_date(datestr):
     """Parse a date string in the Zen format, returning the date object.
     """
-    return datetime.strptime(datestr, "%d/%m/%Y %H:%M")
+    try:
+        return datetime.strptime(datestr, "%d/%m/%Y %H:%M")
+    except Exception as e:
+        print(datestr)
+        raise e
 
 
 def parse_page(page):
@@ -50,11 +54,11 @@ def parse_page(page):
     gridname = grid_prefix + "plannedOutagesGridView"
     for row in tree.xpath(f"//table[@id=\"{gridname}\"]//tbody//tr"):
         issue = {}
-        issue['issue_type'] = row[0].text
-        issue['reference'] = row[1].text_content()
-        issue['start'] = parse_date(row[2].text)
-        issue['end'] = parse_date(row[3].text)
-        issue['codes'] = row[4].text
+        issue['issue_type'] = "Unknown" #row[0].text
+        issue['reference'] = row[2].text_content()
+        issue['start'] = parse_date(row[0].text)
+        issue['end'] = parse_date(row[1].text)
+        issue['codes'] = row[3].text
         if issue['start'].date() - today < time_gap and today - issue['end'].date() < time_gap:
             issues[1].append(issue)
     gridname = grid_prefix + "currentOutagesGridView"
