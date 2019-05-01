@@ -67,7 +67,7 @@ def parse_page(page):
         issue['issue_type'] = row[0].text
         issue['reference'] = row[1].text_content()
         issue['start'] = parse_date(row[2].text)
-        issue['end'] = parse_date(row[3].text)
+        #issue['end'] = parse_date(row[3].text)
         issue['codes'] = row[4].text
         if issue['start'].date() - today < time_gap and today - issue['end'].date() < time_gap:
             issues[0].append(issue)
